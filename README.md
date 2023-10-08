@@ -74,3 +74,63 @@ pip3 install <packagename> -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted
 ```
 
 这将在临时情况下使用清华源来安装特定包。
+### Linux 
+Linux配置较简单，这里我们同样通过创建虚拟环境实现一个干净的新环境进行测试
+```python
+python -m venv venv 
+source venv/bin/activate
+python -m pip install -i https://mirrors.aliyun.com/pypi/simple/ --upgrade pip setuptools
+pip download dlib==19.19.0
+pip install dlib-19.19.0.tar.gz
+```
+你可以选择在
+[dlib官网源](http://dlib.net/files/)
+直接下载得到例如dlib-19.19.0.tar.gz或其他版本的dlib然后
+
+```bash
+pip install dlib-19.19.0.tar.gz
+```
+你也可以
+```bash
+pip download dlib==19.19.0
+pip install dlib-19.19.0.tar.gz
+```
+即可安装成功
+
+# 运行环境
+RetinaFace-FaceNet/shape_predictor_68_face_landmarks.dat
+来源于[davisking/dlib-models](https://github.com/davisking/dlib-models/blob/master/shape_predictor_68_face_landmarks.dat.bz2)
+打包方式基于
+[半自动化使用.bat手动打包迁移python项目
+](https://blog.csdn.net/qq_42531954/article/details/131843603?spm=1001.2014.3001.5501)
+- Python 3.8
+- OpenCV
+- Pytorch
+- dlib
+- gradio
+
+```bash
+rem 创建虚拟环境 
+python -m venv venv
+call venv\Scripts\activate.bat
+python -m pip install -i https://mirrors.aliyun.com/pypi/simple/ --upgrade pip setuptools
+pip install dlib-19.19.0-cp38-cp38-win_amd64.whl.whl
+pip install -i https://mirrors.aliyun.com/pypi/simple/ opencv-python==4.5.3.56
+pip install torch-1.7.1+cu110-cp38-cp38-win_amd64.whl
+pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+pip install -i https://mirrors.aliyun.com/pypi/simple/ gradio
+pip install -i https://mirrors.aliyun.com/pypi/simple/ scikit-learn
+pip install -i https://mirrors.aliyun.com/pypi/simple/ -r requirements.txt
+```
+requirements.txt
+```bash
+scipy==1.7.1
+numpy==1.21.2
+matplotlib==3.4.3
+opencv_python==4.5.3.56
+torch==1.7.1
+torchvision==0.8.2
+tqdm==4.62.2
+Pillow==8.3.2
+h5py==2.10.0
+```
