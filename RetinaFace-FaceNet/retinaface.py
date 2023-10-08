@@ -90,7 +90,7 @@ class Retinaface(object):
         #   是否使用Cuda
         #   没有GPU可以设置成False
         # --------------------------------#
-        "cuda": True
+        "cuda": False
     }
 
     @classmethod
@@ -141,12 +141,13 @@ class Retinaface(object):
         # -------------------------------#
         self.net = RetinaFace(cfg=self.cfg, phase='eval', pre_train=False).eval()
         self.facenet = Facenet(backbone=self.facenet_backbone, mode="predict").eval()
+        torch.cuda.empty_cache()
 
         print('Loading weights into state dict...')
-        state_dict = torch.load(self.retinaface_model_path)
+        state_dict = torch.load(self.retinaface_model_path, map_location=torch.device('cpu'))
         self.net.load_state_dict(state_dict)
 
-        state_dict = torch.load(self.facenet_model_path)
+        state_dict = torch.load(self.facenet_model_path, map_location=torch.device('cpu'))
         self.facenet.load_state_dict(state_dict, strict=False)
 
         if self.cuda:
@@ -618,7 +619,6 @@ class Retinaface(object):
         # -----------------------------------------------#
         #   人脸特征比对-结束
         # -----------------------------------------------#
-        final_name = ""
         for i, b in enumerate(boxes_conf_landms):
             text = "{:.4f}".format(b[4])
             b = list(map(int, b))
@@ -648,8 +648,6 @@ class Retinaface(object):
             #   如果不是必须，可以换成cv2只显示英文。
             # --------------------------------------------------------------#
             old_image = cv2ImgAddText(old_image, name, b[0] + 5, b[3] - 25)
-            final_name = name
-        # return [old_image,final_name]
         return old_image
 
 

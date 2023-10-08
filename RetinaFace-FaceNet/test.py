@@ -102,10 +102,7 @@ class LiveVideoDetector:
 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         # 进行检测
-        # re = self.retinaface.live_detect_image(frame, self.flag)
-        old_image = self.retinaface.live_detect_image(frame, self.flag)
-        # old_image=re[0]
-        # fname =re[1]
+        old_image,fname = self.retinaface.live_detect_image(frame, self.flag)
         frame = np.array(old_image)
         # RGBtoBGR满足opencv显示格式
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
@@ -133,7 +130,6 @@ class LiveVideoDetector:
 
 
 # 开启摄像头实时进行人脸识别
-# video_path = 'input/blink.mp4'
 video_path = 0
 detector = LiveVideoDetector(video_path)
 while True:

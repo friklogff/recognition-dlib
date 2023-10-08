@@ -134,3 +134,19 @@ tqdm==4.62.2
 Pillow==8.3.2
 h5py==2.10.0
 ```
+方案二：
+解决流程：
+
+第一步：
+
+针对不同的系统，安装相应的依赖
+
+# centos系统执行
+yum install xz-devel -y
+yum install python-backports-lzma -y
+
+# ubuntu系统执行
+apt-get install liblzma-dev -y
+第二步：
+
+编译安装python环境orangepi@orangepi:~$ git clone --depth=1 https://gitee.com/leeboby/python_whl
