@@ -1,4 +1,4 @@
-这是一组关于在Linux系统上安装Python 3.9以及更改pip源的步骤。以下是每个步骤的解释：
+这是一组关于在Linux系统上安装Python 3.8以及更改pip源的步骤。以下是每个步骤的解释：
 
 **1) 安装编译 Python 需要的依赖包**
 首先，您需要更新系统软件包列表，并安装编译Python所需的依赖包。这些包包括构建工具和Python的各种库，用于支持Python的不同功能和模块。
@@ -10,23 +10,23 @@ libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev \
 libreadline-dev libffi-dev curl libbz2-dev
 ```
 
-**2) 下载最新版本的Python 3.9源码并解压**
-使用wget下载Python 3.9的源代码压缩文件，并使用tar命令解压缩它。
+**2) 下载最新版本的Python 3.8源码并解压**
+使用wget下载Python 3.8的源代码压缩文件，并使用tar命令解压缩它。
 
 ```bash
-wget https://www.python.org/ftp/python/3.9.10/Python-3.9.10.tgz
-tar xvf Python-3.9.10.tgz
+wget https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tgz
+tar xvf Python-3.8.0.tgz
 ```
 
 **3) 运行配置命令**
 进入解压后的Python源代码目录并运行configure命令，以准备编译Python。--enable-optimizations标志用于启用编译时的优化。
 
 ```bash
-cd Python-3.9.10
+cd Python-3.8.0
 ./configure --enable-optimizations
 ```
 
-**4) 编译安装Python 3.9**
+**4) 编译安装Python 3.8**
 使用make命令编译Python。这可能需要一段时间，大约半个小时左右，具体时间取决于您的系统性能。
 
 ```bash
@@ -38,14 +38,14 @@ sudo make altinstall  # 使用altinstall以防止覆盖系统默认的Python版�
 安装完成后，您可以使用以下命令来验证Python版本：
 
 ```bash
-python3.9 --version
+python3.8 --version
 ```
 
 **6) 更新pip**
-使用新安装的Python 3.9的pip来更新pip本身：
+使用新安装的Python 3.8的pip来更新pip本身：
 
 ```bash
-/usr/local/bin/python3.9 -m pip install --upgrade pip
+/usr/local/bin/python3.8 -m pip install --upgrade pip
 ```
 
 **7) 更换pip源的方法**
