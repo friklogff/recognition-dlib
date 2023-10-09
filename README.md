@@ -5,6 +5,7 @@
 
 ```bash
 sudo apt-get update
+sudo apt-get install liblzma-dev -y
 sudo apt install -y build-essential zlib1g-dev \
 libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libsqlite3-dev \
 libreadline-dev libffi-dev curl libbz2-dev
@@ -77,11 +78,31 @@ pip3 install <packagename> -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted
 ### Linux 
 Linux配置较简单，这里我们同样通过创建虚拟环境实现一个干净的新环境进行测试
 ```python
-python -m venv venv 
+python3.8 -m venv venv 
 source venv/bin/activate
-python -m pip install -i https://mirrors.aliyun.com/pypi/simple/ --upgrade pip setuptools
-pip download dlib==19.19.0
-pip install dlib-19.19.0.tar.gz
+python3.8 -m pip install -i https://mirrors.aliyun.com/pypi/simple/ --upgrade pip setuptools
+pip install -i https://mirrors.aliyun.com/pypi/simple/ scipy==1.7.1
+
+pip install -i https://mirrors.aliyun.com/pypi/simple/ numpy==1.21.2
+
+pip install -i https://mirrors.aliyun.com/pypi/simple/ matplotlib==3.4.3
+
+pip install -i https://mirrors.aliyun.com/pypi/simple/ tqdm==4.62.2
+pip install -i https://mirrors.aliyun.com/pypi/simple/ Pillow==8.3.2
+
+pip install -i https://mirrors.aliyun.com/pypi/simple/ h5py==2.10.0
+
+pip install -i https://mirrors.aliyun.com/pypi/simple/ gradio
+
+pip install -i https://mirrors.aliyun.com/pypi/simple/ opencv-python==4.5.3.56
+pip install torch==1.9.0 torchvision==0.10.0 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+
+pip install dlib-19.24.0-cp38-cp38-linux_aarch64.whl
+
+pip install -i https://mirrors.aliyun.com/pypi/simple/ scikit-learn
+
+
+python3.8 GUI.py
 ```
 你可以选择在
 [dlib官网源](http://dlib.net/files/)
@@ -146,7 +167,7 @@ yum install xz-devel -y
 yum install python-backports-lzma -y
 
 # ubuntu系统执行
-apt-get install liblzma-dev -y
+sudo apt-get install liblzma-dev -y
 第二步：
 
 编译安装python环境orangepi@orangepi:~$ git clone --depth=1 https://gitee.com/leeboby/python_whl
