@@ -61,7 +61,7 @@ class LiveVideoDetector:
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
         self.flag = 0
-        self.fname = None
+        self.name = None
         self.retinaface = Retinaface()
 
     def process_frame(self):
@@ -102,7 +102,7 @@ class LiveVideoDetector:
 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         # 进行检测
-        old_image,fname = self.retinaface.live_detect_image(frame, self.flag)
+        old_image ,self.name = self.retinaface.live_detect_image(frame, self.flag)
         frame = np.array(old_image)
         # RGBtoBGR满足opencv显示格式
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
@@ -125,15 +125,17 @@ class LiveVideoDetector:
     def get_blink_counter(self):
         return self.blink_counter
 
-    def get_fname(self):
-        return self.fname
+    def get_name(self):
+        return self.name
 
 
 # 开启摄像头实时进行人脸识别
-video_path = 0
+video_path = 'R.mp4'
 detector = LiveVideoDetector(video_path)
 while True:
     flag = detector.get_blink_counter()
+    name = detector.get_name()
+
     # fname = detector.get_fname()
     # print(flag, fname)
     frame = detector.process_frame()
@@ -143,7 +145,7 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     if flag == 2:
-        cv2.imwrite("last_frame.png", frame)
+        cv2.imwrite(name+".png", frame)
         # print(fname)
         break
 detector.release()

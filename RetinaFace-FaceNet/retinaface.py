@@ -16,6 +16,7 @@ from utils.utils import (Alignment_1, compare_faces, letterbox_image,
 from utils.utils_bbox import (decode, decode_landm, non_max_suppression,
                               retinaface_correct_boxes)
 
+
 # --------------------------------------#
 #   写中文需要转成PIL来写。
 # --------------------------------------#
@@ -120,7 +121,7 @@ class Retinaface(object):
         #   先验框的生成
         # ---------------------------------------------------#
         self.anchors = Anchors(self.cfg, image_size=(
-        self.retinaface_input_shape[0], self.retinaface_input_shape[1])).get_anchors()
+            self.retinaface_input_shape[0], self.retinaface_input_shape[1])).get_anchors()
         self.generate()
 
         try:
@@ -161,6 +162,7 @@ class Retinaface(object):
     def encode_face_dataset(self, image_paths, names):
         face_encodings = []
         for index, path in enumerate(tqdm(image_paths)):
+            # print('index,path',index,path)
             # ---------------------------------------------------#
             #   打开人脸图片
             # ---------------------------------------------------#
@@ -194,6 +196,7 @@ class Retinaface(object):
             #   将处理完的图片传入Retinaface网络当中进行预测
             # ---------------------------------------------------#
             with torch.no_grad():
+                # print(names[index], "here")
                 # -----------------------------------------------------------#
                 #   图片预处理，归一化。
                 # -----------------------------------------------------------#
@@ -542,7 +545,7 @@ class Retinaface(object):
             #   如果没有预测框则返回原图
             # ---------------------------------------------------#
             if len(boxes_conf_landms) <= 0:
-                return old_image
+                return old_image, 'False'
 
             # ---------------------------------------------------------#
             #   如果使用了letterbox_image的话，要把灰条的部分去除掉。
@@ -648,8 +651,11 @@ class Retinaface(object):
             #   如果不是必须，可以换成cv2只显示英文。
             # --------------------------------------------------------------#
             old_image = cv2ImgAddText(old_image, name, b[0] + 5, b[3] - 25)
-        return old_image
-
+        print('ff:', face_names[0])
+        if face_names:
+            return old_image, face_names[0]
+        else:
+            return old_image, 'False'
 
     def get_FPS(self, image, test_interval):
         # ---------------------------------------------------#
@@ -856,7 +862,7 @@ class Retinaface(object):
                     #   人脸编码
                     # ----------------------#
                     crop_img = np.array(letterbox_image(np.uint8(crop_img), (
-                    self.facenet_input_shape[1], self.facenet_input_shape[0]))) / 255
+                        self.facenet_input_shape[1], self.facenet_input_shape[0]))) / 255
                     crop_img = np.expand_dims(crop_img.transpose(2, 0, 1), 0)
                     with torch.no_grad():
                         crop_img = torch.from_numpy(crop_img).type(torch.FloatTensor)

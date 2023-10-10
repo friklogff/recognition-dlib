@@ -140,11 +140,10 @@ class HeadPoseDetection:
             return self.head_status, 0
 
 
-
-
 class FaceDetection:
     def __init__(self, video_path, video_save_path="", video_fps=25.0, use_camera=False):
 
+        self.name = None
         self.mouth_flag = False
         self.head_flag = False
         self.blink_flag = False
@@ -158,9 +157,9 @@ class FaceDetection:
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
             size = (int(self.capture.get(cv2.CAP_PROP_FRAME_WIDTH)), int(self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT)))
             self.out = cv2.VideoWriter(video_save_path, fourcc, video_fps, size)
-        ref, frame = self.capture.read()
+        self.ref, frame = self.capture.read()
 
-        if not ref:
+        if not self.ref:
             raise ValueError("未能正确读取摄像头（视频），请注意是否正确安装摄像头（是否正确填写视频路径）。")
         self.fps = 0.0
         self.flag = 0
@@ -210,27 +209,27 @@ class FaceDetection:
 
     def process_frame(self):
         t1 = time.time()
-        ref, frame = self.capture.read()
-        if not ref:
+        self.ref, self.frame = self.capture.read()
+        if not self.ref:
             return None
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
         faces = self.detector(gray, 0)
         if self.flag == 1:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            old_image = self.retinaface.live_detect_image(frame, self.flag)
-            frame = np.array(old_image)
-            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+            self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+            old_image, self.name = self.retinaface.live_detect_image(self.frame, self.flag)
+            self.frame = np.array(old_image)
+            self.frame = cv2.cvtColor(self.frame, cv2.COLOR_RGB2BGR)
             self.fps = (self.fps + (1. / (time.time() - t1))) / 2
             # print("fps= %.2f" % (self.fps))
-            frame = cv2.putText(frame, "fps= %.2f" % self.fps, (200, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            self.frame = cv2.putText(self.frame, "fps= %.2f" % self.fps, (200, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
         elif len(faces) != 0:
             largest_index = self._largest_face(faces)
             face_rectangle = faces[largest_index]
-            landmarks = np.matrix([[p.x, p.y] for p in self.predictor(frame, face_rectangle).parts()])
+            landmarks = np.matrix([[p.x, p.y] for p in self.predictor(self.frame, face_rectangle).parts()])
             if self.random_flag == 1:
                 # 调用眨眼检测函数
-                self.detect_blink(frame, landmarks)
+                self.detect_blink(self.frame, landmarks)
                 if self.blink_counter > 3:
                     self.blink_flag = True
                     self.random_flag = random.randint(1, 3)
@@ -238,13 +237,13 @@ class FaceDetection:
             if self.random_flag == 2:
 
                 # 调用嘴巴动作检测函数
-                self.detect_mouth(frame, landmarks)
+                self.detect_mouth(self.frame, landmarks)
                 if self.mouth_counter > 3:
                     self.mouth_flag = True
                     self.random_flag = random.randint(1, 3)
             if self.random_flag == 3:
                 # 调用头部姿势检测函数
-                self.detect_head_pose(frame, gray, face_rectangle)
+                self.detect_head_pose(self.frame, gray, face_rectangle)
                 if self.head_counter == 0:
                     self.head_flag = True
                     self.random_flag = random.randint(1, 3)
@@ -252,9 +251,9 @@ class FaceDetection:
                 self.flag = 1
 
         if self.video_save_path != "":
-            self.out.write(frame)
+            self.out.write(self.frame)
 
-        return frame
+        return self.ref, self.frame
 
     def _largest_face(self, dets):
         if len(dets) == 1:
@@ -288,6 +287,12 @@ class FaceDetection:
     def get_flag(self):
         return self.flag
 
+    def get_name(self):
+        return self.name
+
+    def get(self, param):
+        pass
+
 
 if __name__ == "__main__":
     detector = FaceDetection('R.mp4')  # 使用摄像头，也可以指定视频文件路径
@@ -295,7 +300,7 @@ if __name__ == "__main__":
     while True:
         flag = detector.get_flag()
 
-        frame = detector.process_frame()
+        ref, frame = detector.process_frame()
         blink_counter = detector.get_blink_counter()
         mouth_counter = detector.get_mouth_counter()
         head_counter = detector.get_head_counter()
