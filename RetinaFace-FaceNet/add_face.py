@@ -17,7 +17,7 @@ import numpy as np
 import pymysql
 
 import try_7
-from retinaface import Retinaface
+from retinaface_new import Retinaface
 
 
 class Database:
