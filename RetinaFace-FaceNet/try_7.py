@@ -280,7 +280,7 @@ class FaceDetection:
 
 
 if __name__ == "__main__":
-    detector = FaceDetection('R.mp4')  # 使用摄像头，也可以指定视频文件路径
+    detector = FaceDetection(0)  # 使用摄像头，也可以指定视频文件路径
 
     while True:
         flag = detector.get_flag()
